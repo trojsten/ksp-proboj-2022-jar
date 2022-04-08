@@ -16,6 +16,7 @@ func (g *Game) ReadConfig(scanner *bufio.Scanner) error {
 	}
 
 	scanner.Scan()
+	g.Scores = map[string]int{}
 	players := strings.Split(scanner.Text(), " ")
 	for i, player := range players {
 		g.Players = append(g.Players, Player{
