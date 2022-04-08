@@ -14,10 +14,17 @@ const (
 	Died
 )
 
-func DataToObserver(data string) {
+func DataToObserver(data string, server *bufio.Scanner) ServerResult {
 	fmt.Println("TO OBSERVER")
 	fmt.Println(data)
 	fmt.Println(".")
+
+	server.Scan()
+	res := server.Text()
+	if res == "OK" {
+		return Ok
+	}
+	return Unknown
 }
 
 func DataToPlayer(data string, player string, server *bufio.Scanner) ServerResult {

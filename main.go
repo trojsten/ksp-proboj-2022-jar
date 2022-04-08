@@ -45,7 +45,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	DataToObserver(data)
+	DataToObserver(data, scanner)
 
 	gameLoop(&game, scanner)
 	SendScores(game, scanner)
@@ -87,7 +87,7 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 			if err != nil {
 				panic(err)
 			}
-			DataToObserver(data)
+			DataToObserver(data, scanner)
 		}
 
 		game.PowerUpTime--
