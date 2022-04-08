@@ -11,7 +11,7 @@ type PowerUp struct {
 }
 
 const PUTypeCount = 5
-const PUDefaultTime = 20
+const PUDefaultTime = 10
 
 const (
 	PUSpeedMe PowerUpType = iota
