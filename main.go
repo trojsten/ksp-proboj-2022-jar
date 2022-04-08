@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
+	"time"
 )
 
 type Map struct {
@@ -39,6 +41,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	rand.Seed(time.Now().UnixMilli())
 
 	game.PrepareMap()
 	data, err := game.ObserverState()
