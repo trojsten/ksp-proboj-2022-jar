@@ -36,7 +36,7 @@ func (g Game) StateForPlayer(p Player) string {
 	}
 
 	// Myself
-	data = append(data, fmt.Sprintf("1 %d %d %d %d %d", p.X, p.Y, p.Dx, p.Dy, p.Speed))
+	data = append(data, fmt.Sprintf("1 %d %d %d %d %d %d", p.X, p.Y, p.Dx, p.Dy, p.Speed, p.SpeedResetTime))
 
 	// Players (excl. me)
 	data = append(data, strconv.Itoa(len(g.Players)-1))
