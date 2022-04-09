@@ -24,6 +24,8 @@ type Player struct {
 	Speed          int
 	SpeedResetTime int
 	Alive          bool
+	Color          string
+	DisplayName    string
 }
 
 type Game struct {
@@ -45,6 +47,8 @@ func main() {
 	rand.Seed(time.Now().UnixMilli())
 
 	game.PrepareMap()
+	populatePlayerData(&game, scanner)
+
 	data, err := game.ObserverState()
 	if err != nil {
 		panic(err)
@@ -54,6 +58,30 @@ func main() {
 	gameLoop(&game, scanner)
 	SendScores(game, scanner)
 	fmt.Println("END\n.")
+}
+
+func populatePlayerData(game *Game, scanner *bufio.Scanner) {
+	for i, _ := range game.Players {
+		player := &game.Players[i]
+
+		res := DataToPlayer("HELLO", player.Name, scanner)
+		if res == Died {
+			player.Alive = false
+			continue
+		}
+
+		// Read data from player
+		res, playerData := ReadFromPlayer(player.Name, scanner)
+		if res == Died {
+			player.Alive = false
+			continue
+		}
+
+		_, err := fmt.Sscanf(playerData, "%s %s", &player.DisplayName, &player.Color)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+	}
 }
 
 func gameLoop(game *Game, scanner *bufio.Scanner) {
