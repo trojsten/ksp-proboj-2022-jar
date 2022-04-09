@@ -51,7 +51,7 @@ func (g Game) StateForPlayer(p Player) string {
 		} else {
 			aliveInt = 0
 		}
-		data = append(data, fmt.Sprintf("%d %d %d %d %d %d", aliveInt, player.X, player.Y, player.Dx, player.Dy, player.Speed))
+		data = append(data, fmt.Sprintf("%d %d %d %d %d %d 0", aliveInt, player.X, player.Y, player.Dx, player.Dy, player.Speed))
 	}
 
 	// Power-ups
