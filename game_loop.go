@@ -89,6 +89,13 @@ func (g *Game) UpdateState(p *Player, data string) bool {
 
 		tile := &g.Map.Contents[x][y]
 		if *tile != -1 {
+			if *tile >= 0 {
+				if *tile != p.Idx {
+					g.Scores[g.Players[*tile].Name]++
+				} else {
+					g.Scores[p.Name]--
+				}
+			}
 			return false
 		}
 		*tile = p.Idx
@@ -115,4 +122,21 @@ func (g *Game) UpdateState(p *Player, data string) bool {
 	}
 
 	return true
+}
+
+func (g *Game) HandleDeath(p *Player) {
+	p.Alive = false
+
+	alive := []Player{}
+	for _, player := range g.Players {
+		if player.Alive {
+			alive = append(alive, player)
+		}
+	}
+
+	if len(alive) == 1 {
+		g.Scores[alive[0].Name] += len(g.Players)
+	}
+
+	g.Scores[p.Name] += len(g.Players) - len(alive)
 }

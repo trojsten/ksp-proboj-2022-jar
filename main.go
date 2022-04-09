@@ -66,14 +66,14 @@ func populatePlayerData(game *Game, scanner *bufio.Scanner) {
 
 		res := DataToPlayer("HELLO", player.Name, scanner)
 		if res == Died {
-			player.Alive = false
+			game.HandleDeath(player)
 			continue
 		}
 
 		// Read data from player
 		res, playerData := ReadFromPlayer(player.Name, scanner)
 		if res == Died {
-			player.Alive = false
+			game.HandleDeath(player)
 			continue
 		}
 
@@ -96,14 +96,14 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 			data := game.StateForPlayer(*player)
 			res := DataToPlayer(data, player.Name, scanner)
 			if res == Died {
-				player.Alive = false
+				game.HandleDeath(player)
 				continue
 			}
 
 			// Read data from player
 			res, playerData := ReadFromPlayer(player.Name, scanner)
 			if res == Died {
-				player.Alive = false
+				game.HandleDeath(player)
 				continue
 			}
 
@@ -111,7 +111,7 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 			valid := game.UpdateState(player, playerData)
 			if !valid {
 				KillPlayer(player.Name, scanner)
-				player.Alive = false
+				game.HandleDeath(player)
 			}
 
 			// Send state to observer
