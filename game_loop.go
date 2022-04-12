@@ -63,70 +63,56 @@ func (g Game) StateForPlayer(p Player) string {
 	return strings.Join(data, "\n")
 }
 
-func (g *Game) UpdateState(p *Player, data string) bool {
-	newDx := 0
-	newDy := 0
-
-	if data == "L" {
-		newDx = p.Dy
-		newDy = -p.Dx
-	} else if data == "R" {
-		newDx = -p.Dy
-		newDy = p.Dx
-	} else if data == "x" {
-		newDx = p.Dx
-		newDy = p.Dy
-	} else {
-		return false
+func (g *Game) PlayerAt(x, y int) *Player {
+	if x < 0 || y < 0 || x >= g.Map.Width || y >= g.Map.Height {
+		return nil
 	}
 
-	for i := 1; i < p.Speed+1; i++ {
-		x := p.X + newDx*i
-		y := p.Y + newDy*i
-		if x < 0 || y < 0 || x >= g.Map.Width || y >= g.Map.Height {
-			return false
+	for i, _ := range g.Players {
+		player := &g.Players[i]
+		if !player.Alive {
+			continue
 		}
 
-		tile := &g.Map.Contents[x][y]
-		if *tile != -1 {
-			if *tile >= 0 {
-				if *tile != p.Idx {
-					g.Scores[g.Players[*tile].Name]++
-				} else {
-					g.Scores[p.Name]--
-				}
-			}
-			return false
-		}
-		*tile = p.Idx
-
-		for i, up := range g.PowerUps {
-			if up.X == x && up.Y == y {
-				g.ApplyPowerUp(up.Type, p)
-				g.PowerUps = append(g.PowerUps[:i], g.PowerUps[i+1:]...)
-				break
-			}
+		if player.X == x && player.Y == y {
+			return player
 		}
 	}
 
-	p.X = p.X + newDx*p.Speed
-	p.Y = p.Y + newDy*p.Speed
-	p.Dx = newDx
-	p.Dy = newDy
-
-	if p.Speed != 1 {
-		p.SpeedResetTime--
-		if p.SpeedResetTime <= 0 {
-			p.Speed = 1
-		}
-	}
-
-	return true
+	return nil
 }
 
 func (g *Game) HandleDeath(p *Player) {
 	p.Alive = false
+	g.PlayersDeadThisRound = append(g.PlayersDeadThisRound, p.Idx)
+}
 
+func (g *Game) UpdateScore(p *Player, x, y int) {
+	// Out-of-bounds
+	if x < 0 || y < 0 || x >= g.Map.Width || y >= g.Map.Height {
+		return
+	}
+
+	tile := g.Map.Contents[x][y]
+
+	// Empty tiles
+	if tile == -1 {
+		return
+	}
+
+	// My own tile
+	if tile == p.Idx {
+		g.Scores[p.Name]--
+		return
+	}
+
+	// Tile of another player
+	if tile >= 0 {
+		g.Scores[g.Players[tile].Name]++
+	}
+}
+
+func (g *Game) DeathScore(p *Player) {
 	alive := []Player{}
 	for _, player := range g.Players {
 		if player.Alive {
