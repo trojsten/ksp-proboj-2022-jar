@@ -46,7 +46,7 @@ type Game struct {
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "v" {
 		fmt.Println("Proboj Tron Server")
-		fmt.Println("version 3")
+		fmt.Println("version 6")
 		return
 	}
 
@@ -103,7 +103,7 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 		game.PowerUpsThisRound = []PowerUpActivation{}
 
 		// Read data from players
-		commands := map[string]string{}
+		commands := map[int]string{}
 		for i, _ := range game.Players {
 			player := &game.Players[i]
 			if !player.Alive {
@@ -125,7 +125,7 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 				continue
 			}
 
-			commands[player.Name] = playerData
+			commands[player.Idx] = playerData
 		}
 
 		// Settle
@@ -140,7 +140,7 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 				speeds = append(speeds, player.Speed)
 			}
 
-			data, exists := commands[player.Name]
+			data, exists := commands[player.Idx]
 			if !exists {
 				game.HandleDeath(player)
 				continue
@@ -162,7 +162,11 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 					continue
 				}
 
-				if (lcm/player.Speed)%tick != 0 {
+				if player.Speed == 0 {
+					continue
+				}
+
+				if tick%(lcm/player.Speed) != 0 {
 					continue
 				}
 
