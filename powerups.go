@@ -61,6 +61,11 @@ func (g *Game) SpawnPowerUp() {
 	x := rand.Intn(g.Map.Width)
 	y := rand.Intn(g.Map.Height)
 
+	for g.Map.Contents[x][y] != -1 {
+		x = rand.Intn(g.Map.Width)
+		y = rand.Intn(g.Map.Height)
+	}
+
 	g.PowerUps = append(g.PowerUps, PowerUp{
 		X:    x,
 		Y:    y,
