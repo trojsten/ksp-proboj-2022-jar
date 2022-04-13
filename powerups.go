@@ -12,6 +12,7 @@ type PowerUp struct {
 
 const PUTypeCount = 5
 const PUDefaultTime = 10
+const PUSpeedResetTime = 10
 
 const (
 	PUSpeedMe PowerUpType = iota
@@ -24,7 +25,7 @@ const (
 func (g *Game) ApplyPowerUp(typ PowerUpType, invoker *Player) {
 	if typ == PUSpeedMe {
 		invoker.Speed *= 2
-		invoker.SpeedResetTime = 10
+		invoker.SpeedResetTime = PUSpeedResetTime
 	} else if typ == PUSpeedOthers {
 		for i, _ := range g.Players {
 			player := &g.Players[i]
@@ -33,11 +34,11 @@ func (g *Game) ApplyPowerUp(typ PowerUpType, invoker *Player) {
 			}
 
 			player.Speed *= 2
-			player.SpeedResetTime = 10
+			player.SpeedResetTime = PUSpeedResetTime
 		}
 	} else if typ == PUStopMe {
 		invoker.Speed = 0
-		invoker.SpeedResetTime = 10
+		invoker.SpeedResetTime = PUSpeedResetTime
 	} else if typ == PUStopOthers {
 		for i, _ := range g.Players {
 			player := &g.Players[i]
@@ -46,7 +47,7 @@ func (g *Game) ApplyPowerUp(typ PowerUpType, invoker *Player) {
 			}
 
 			player.Speed = 0
-			player.SpeedResetTime = 10
+			player.SpeedResetTime = PUSpeedResetTime
 		}
 	} else if typ == PUClean {
 		for x := 0; x < g.Map.Width; x++ {
