@@ -42,7 +42,10 @@ func (g *Game) MovePlayer(p *Player) (bool, int, int) {
 	// Todo pickup
 	for i, up := range g.PowerUps {
 		if up.X == x && up.Y == y {
-			g.ApplyPowerUp(up.Type, p)
+			g.PowerUpsThisRound = append(g.PowerUpsThisRound, PowerUpActivation{
+				Type:   up.Type,
+				Player: p,
+			})
 			g.PowerUps = append(g.PowerUps[:i], g.PowerUps[i+1:]...)
 			break
 		}

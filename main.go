@@ -28,9 +28,15 @@ type Player struct {
 	DisplayName    string
 }
 
+type PowerUpActivation struct {
+	Type   PowerUpType
+	Player *Player
+}
+
 type Game struct {
 	Players              []Player
 	PlayersDeadThisRound []int
+	PowerUpsThisRound    []PowerUpActivation
 	Map                  Map
 	Scores               map[string]int
 	PowerUps             []PowerUp
@@ -94,6 +100,7 @@ func populatePlayerData(game *Game, scanner *bufio.Scanner) {
 func gameLoop(game *Game, scanner *bufio.Scanner) {
 	for game.Running() {
 		game.PlayersDeadThisRound = []int{}
+		game.PowerUpsThisRound = []PowerUpActivation{}
 
 		// Read data from players
 		commands := map[string]string{}
@@ -190,6 +197,11 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 		// Update scores of players that died this round
 		for _, n := range game.PlayersDeadThisRound {
 			game.DeathScore(&game.Players[n])
+		}
+
+		// Apply powerups
+		for _, activation := range game.PowerUpsThisRound {
+			game.ApplyPowerUp(activation.Type, activation.Player)
 		}
 
 		// Send state to observer
