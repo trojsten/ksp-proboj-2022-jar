@@ -36,23 +36,30 @@ std::string NAME, COLOR;
 
 void read_state() {
     std::cin >> MAP.width >> MAP.height;
-    MAP.contents.clear()
+    if (MAP.contents.empty()) {
+        for (int x = 0; x < MAP.width; ++x) {
+            std::vector<bool> row;
+            for (int y = 0; y < MAP.height; ++y) {
+                row.push_back(false);
+            }
+            MAP.contents.push_back(row);
+        }
+    }
+
     for (int y = 0; y < MAP.height; ++y) {
-        std::vector<bool> row;
         for (int x = 0; x < MAP.width; ++x) {
             bool a;
             std::cin >> a;
-            row.push_back(a);
+            MAP.contents[x][y] = a;
         }
-        MAP.contents.push_back(row);
     }
 
     MYSELF = player_from_input();
     int players;
     std::cin >> players;
-    PLAYERS.clear()
+    PLAYERS.clear();
     for (int i = 0; i < players; ++i) {
-        PLAYERS.push_back(player_from_input())
+        PLAYERS.push_back(player_from_input());
     }
 
     int powerups;
@@ -87,7 +94,7 @@ Command do_turn() {
 }
 
 int main() {
-    srand(time());
+    srand(time(0));
 
     NAME = "Cpp";
     COLOR = "#00ff00";
