@@ -49,9 +49,13 @@ class TronClient:
 
     def read_state(self):
         self.map.width, self.map.height = map(int, input().split())
-        self.map.contents = []
+        if self.map.contents is None:
+            self.map.contents = [[False for y in range(self.map.height)] for x in range(self.map.width)]
+
         for y in range(self.map.height):
-            self.map.contents.append(list(map(bool, input().split())))
+            row = list(map(lambda x: x == "1", input().split()))
+            for x in range(self.map.width):
+                self.map.contents[x][y] = row[x]
 
         self.myself = Player.from_input(input())
 
