@@ -13,16 +13,24 @@ const CTX = setupCanvas(CANVAS)
 let GRID = 0
 let OBSLINES = []
 let FRAME = 0
+const urlParams = new URLSearchParams(window.location.search)
 
-function showFile(f) {
-    let reader = new FileReader()
-    reader.onload = function() {
-        observe(reader.result)
-    }
-    reader.readAsText(f.files[0])
+async function showFile(f) {
+    let file = f.files[0]
+    let data = await file.arrayBuffer()
+    observe(data)
 }
 
 function observe(log) {
+    log = new Uint8Array(log)
+    try {
+        log = pako.inflate(log)
+        log = new TextDecoder().decode(log)
+    } catch (err) {
+        alert("error while inflating: " + err)
+        return
+    }
+
     lines = log.split("\n")
     OBSLINES = []
     for (let i = 0; i < lines.length; i++) {
@@ -34,13 +42,9 @@ function observe(log) {
 
     FRAME = 0
     renderFrame(0)
-    setInterval(nextFrame, 100)
-}
 
-function nextFrame() {
-    FRAME++
-    if (FRAME < OBSLINES.length) {
-        renderFrame(FRAME)
+    if (urlParams.get("autoplay") === "1") {
+        PLAYBACK.playing = true
     }
 }
 
@@ -68,8 +72,25 @@ function renderPlayers(f) {
 
 function renderFrame(f) {
     const frame = OBSLINES[f]
-    GRID = CANVAS.width / frame.Map.Width
+    GRID = Math.min(CANVAS.width / frame.Map.Width, CANVAS.height / frame.Map.Height)
     CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
+
+    CTX.shadowColor = null
+    CTX.shadowBlur = null
+    CTX.strokeStyle = 'rgba(26,26,26)'
+    for (let x = 0; x < frame.Map.Width; x++) { 
+        CTX.beginPath()
+        CTX.moveTo(x * GRID, 0)
+        CTX.lineTo(x * GRID, frame.Map.Height * GRID)
+        CTX.stroke()
+    }
+    for (let y = 0; y < frame.Map.Height; y++) { 
+        CTX.beginPath()
+        CTX.moveTo(0, y * GRID)
+        CTX.lineTo(frame.Map.Width * GRID, y * GRID)
+        CTX.stroke()
+    }
+    CTX.strokeStyle = null
 
     for (let x = 0; x < frame.Map.Width; x++) {
         for (let y = 0; y < frame.Map.Height; y++) {
@@ -127,4 +148,65 @@ function renderFrame(f) {
     }
 
     renderPlayers(f)
+}
+
+let PLAYBACK = {
+    playing: false,
+    speed: 200
+}
+
+document.getElementById("js-frame-prev").addEventListener("click", () => {
+    FRAME--
+    FRAME = Math.max(FRAME, 0)
+    renderFrame(FRAME)
+})
+
+document.getElementById("js-frame-next").addEventListener("click", () => {
+    FRAME++
+    FRAME = Math.min(FRAME, OBSLINES.length - 1)
+    renderFrame(FRAME)
+})
+
+document.getElementById("js-speed-slower").addEventListener("click", () => {
+    PLAYBACK.speed += 20
+})
+
+document.getElementById("js-speed-faster").addEventListener("click", () => {
+    PLAYBACK.speed -= 20
+    PLAYBACK.speed = Math.max(PLAYBACK.speed, 20)
+})
+
+document.getElementById("js-play").addEventListener("click", () => {
+    PLAYBACK.playing = true
+})
+
+document.getElementById("js-pause").addEventListener("click", () => {
+    PLAYBACK.playing = false
+})
+
+function playTick() {
+    if (PLAYBACK.playing) {
+        if (FRAME < OBSLINES.length - 1) {
+            FRAME++
+            renderFrame(FRAME)
+        } else {
+            PLAYBACK.playing = false
+
+            if (urlParams.get("autoplay") === "1") {
+                setTimeout(() => {window.location = "/autoplay/"}, 2500)
+            }
+        }
+    }
+    setTimeout(playTick, PLAYBACK.speed)
+}
+
+playTick()
+
+if (urlParams.has("file")) {
+    document.getElementById("js-file").style.display = "none"
+
+    fetch(urlParams.get("file"))
+        .then(res => res.blob())
+        .then(blob => blob.arrayBuffer())
+        .then(buffer => observe(buffer))
 }

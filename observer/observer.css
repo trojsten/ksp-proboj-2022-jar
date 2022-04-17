@@ -20,7 +20,7 @@ body {
 }
 
 .game {
-    background: #222;
+    background: rgb(31 41 55);
     height: 100%;
     flex-grow: 1;
     display: flex;
@@ -38,7 +38,7 @@ body {
 .sidebar {
     flex-shrink: 0;
     width: 20%;
-    background: #111;
+    background: rgb(17 24 39);
     height: 100%;
     padding: 2em;
 }
@@ -74,4 +74,38 @@ body {
 
 .player-dead .player-color {
     background: #555 !important;
+}
+
+input {
+    margin-bottom: 1em;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: 1;
+    gap: 0.25em;
+
+    align-items: center;
+    justify-content: center;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.button {
+    border: 0;
+    border-radius: 0.5em;
+    width: 3em;
+    height: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgb(31 41 55);
+    color: white;
+
+    cursor: pointer;
+}
+
+.button:hover {
+    background: rgb(29 78 216);
 }
