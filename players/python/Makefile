@@ -3,7 +3,7 @@ CLEAN = player.tar.gz player
 .PHONY: clean player.tar.gz
 
 player.tar.gz:
-	tar -cvzf $@ $(wildcard *.py)
+	tar -cvzf $@ $(wildcard *.py) Makefile
 
 player: main.py
 	cp $< $@
