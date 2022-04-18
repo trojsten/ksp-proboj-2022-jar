@@ -4,6 +4,14 @@ from dataclasses import dataclass
 from typing import List
 
 
+class PowerUpType(enum.IntEnum):
+    SPEED_ME = 1
+    SPEED_OTHERS = 2
+    STOP_ME = 3
+    STOP_OTHERS = 4
+    CLEAN = 5
+
+
 @dataclass
 class Player:
     x: int
@@ -13,12 +21,17 @@ class Player:
     speed: int = 0
     speed_reset_time: int = 0
     alive: bool = False
+    powerup: PowerUpType | None = 0
 
     @classmethod
     def from_input(cls, data: str) -> "Player":
-        alive, x, y, dx, dy, s, sr = map(int, data.split())
+        alive, x, y, dx, dy, s, sr, powerup = map(int, data.split())
         alive = bool(alive)
-        return Player(x, y, dx, dy, s, sr, alive)
+        if powerup == 0:
+            powerup = None
+        else:
+            powerup = PowerUpType(powerup)
+        return Player(x, y, dx, dy, s, sr, alive, powerup)
 
 
 @dataclass
@@ -35,10 +48,21 @@ class Map:
     powerups: List[PowerUp] = None
 
 
-class Command(enum.Enum):
+class Direction(enum.Enum):
     LEFT = "L"
     RIGHT = "R"
     NONE = "x"
+
+
+@dataclass
+class Command:
+    direction: Direction
+    use_powerup: bool = False
+
+    def to_string(self):
+        if self.use_powerup:
+            return f"{self.direction.value}+"
+        return f"{self.direction.value}"
 
 
 class TronClient:
@@ -89,7 +113,7 @@ class TronClient:
         while self.myself.alive:
             self.read_state()
             cmd = self.turn()
-            print(cmd.value)
+            print(cmd.to_string())
             print(".", flush=True)
         print("Bye")
 

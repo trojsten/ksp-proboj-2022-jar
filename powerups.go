@@ -71,6 +71,6 @@ func (g *Game) SpawnPowerUp() {
 	g.PowerUps = append(g.PowerUps, PowerUp{
 		X:    x,
 		Y:    y,
-		Type: PowerUpType(rand.Intn(PUTypeCount)),
+		Type: PowerUpType(1 + rand.Intn(PUTypeCount)),
 	})
 }

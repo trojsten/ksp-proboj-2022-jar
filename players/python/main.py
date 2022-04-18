@@ -13,7 +13,8 @@ class OurClient(TronClient):
         return "#ff0000"
 
     def turn(self) -> Command:
-        return random.choice([Command.LEFT, Command.RIGHT, Command.NONE])
+        d = random.choice([Direction.LEFT, Direction.RIGHT, Direction.NONE])
+        return Command(d, False)
 
 
 if __name__ == '__main__':
