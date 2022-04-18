@@ -3,7 +3,7 @@
 #include <vector>
 
 struct Player {
-    int x, y, dx, dy, speed, speed_reset_time;
+    int x, y, dx, dy, speed, speed_reset_time, powerup;
     bool alive;
 };
 
@@ -17,15 +17,20 @@ struct Map {
     std::vector<PowerUp> powerups;
 };
 
-enum Command: char {
+enum Direction: char {
     LEFT = 'L',
     RIGHT = 'R',
     NONE = 'x'
 };
 
+struct Command {
+    Direction direction;
+    bool use_powerup;
+}
+
 Player player_from_input() {
     Player p;
-    std::cin >> p.x >> p.y >> p.dx >> p.dy >> p.speed >> p.speed_reset_time >> p.alive;
+    std::cin >> p.x >> p.y >> p.dx >> p.dy >> p.speed >> p.speed_reset_time >> p.alive >> p.powerup;
     return p;
 }
 
@@ -85,12 +90,15 @@ void greet_server() {
 
 Command do_turn() {
     int x = rand() % 3;
+    Command cmd;
     if (x == 0) {
-        return LEFT;
+        cmd.direction = LEFT;
     } else if (x == 1) {
-        return RIGHT;
+        cmd.direction = RIGHT;
+    } else {
+        cmd.direction = NONE;
     }
-    return NONE;
+    return cmd;
 }
 
 int main() {
@@ -105,6 +113,11 @@ int main() {
     while (MYSELF.alive) {
         read_state();
         Command cmd = do_turn();
-        std::cout << cmd << std::endl << "." << std::endl;
+        if (cmd.use_powerup) {
+            std::cout << cmd.direction << "+" << std::endl;
+        } else {
+            std::cout << cmd.direction << std::endl;
+        }
+        std::cout << "." << std::endl;
     }
 }
