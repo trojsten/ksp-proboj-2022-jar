@@ -36,7 +36,7 @@ func (g Game) StateForPlayer(p Player) string {
 	}
 
 	// Myself
-	data = append(data, fmt.Sprintf("1 %d %d %d %d %d %d", p.X, p.Y, p.Dx, p.Dy, p.Speed, p.SpeedResetTime))
+	data = append(data, fmt.Sprintf("1 %d %d %d %d %d %d %d", p.X, p.Y, p.Dx, p.Dy, p.Speed, p.SpeedResetTime, p.PowerUp))
 
 	// Players (excl. me)
 	data = append(data, strconv.Itoa(len(g.Players)-1))
@@ -51,7 +51,7 @@ func (g Game) StateForPlayer(p Player) string {
 		} else {
 			aliveInt = 0
 		}
-		data = append(data, fmt.Sprintf("%d %d %d %d %d %d 0", aliveInt, player.X, player.Y, player.Dx, player.Dy, player.Speed))
+		data = append(data, fmt.Sprintf("%d %d %d %d %d %d 0 0", aliveInt, player.X, player.Y, player.Dx, player.Dy, player.Speed))
 	}
 
 	// Power-ups

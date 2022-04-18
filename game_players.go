@@ -4,6 +4,10 @@ func (g *Game) RotatePlayer(p *Player, data string) bool {
 	newDx := 0
 	newDy := 0
 
+	if len(data) > 1 {
+		data = data[0:1]
+	}
+
 	if data == "L" {
 		newDx = p.Dy
 		newDy = -p.Dx
@@ -39,13 +43,9 @@ func (g *Game) MovePlayer(p *Player) (bool, int, int) {
 	p.X = x
 	p.Y = y
 
-	// Todo pickup
 	for i, up := range g.PowerUps {
 		if up.X == x && up.Y == y {
-			g.PowerUpsThisRound = append(g.PowerUpsThisRound, PowerUpActivation{
-				Type:   up.Type,
-				Player: p,
-			})
+			p.PowerUp = up.Type
 			g.PowerUps = append(g.PowerUps[:i], g.PowerUps[i+1:]...)
 			break
 		}

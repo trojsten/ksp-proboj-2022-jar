@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -24,6 +25,7 @@ type Player struct {
 	Speed          int
 	SpeedResetTime int
 	Alive          bool
+	PowerUp        PowerUpType
 	Color          string
 	DisplayName    string
 }
@@ -46,7 +48,7 @@ type Game struct {
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "v" {
 		fmt.Println("Proboj Tron Server")
-		fmt.Println("version 6")
+		fmt.Println("version 7")
 		return
 	}
 
@@ -150,6 +152,16 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 			if !ok {
 				game.HandleDeath(player)
 				continue
+			}
+
+			if strings.HasSuffix(data, "+") {
+				if player.PowerUp != PUNone {
+					game.PowerUpsThisRound = append(game.PowerUpsThisRound, PowerUpActivation{
+						Type:   player.PowerUp,
+						Player: player,
+					})
+					player.PowerUp = PUNone
+				}
 			}
 		}
 

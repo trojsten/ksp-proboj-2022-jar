@@ -15,7 +15,8 @@ const PUDefaultTime = 10
 const PUSpeedResetTime = 10
 
 const (
-	PUSpeedMe PowerUpType = iota
+	PUNone PowerUpType = iota
+	PUSpeedMe
 	PUSpeedOthers
 	PUStopMe
 	PUStopOthers
