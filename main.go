@@ -10,9 +10,10 @@ import (
 )
 
 type Map struct {
-	Width    int
-	Height   int
-	Contents [][]int
+	Width       int
+	Height      int
+	Contents    [][]int
+	SpawnPoints []Point `json:"-"`
 }
 
 type Player struct {
@@ -35,10 +36,14 @@ type PowerUpActivation struct {
 	Player *Player
 }
 
+type Point struct {
+	X, Y int
+}
+
 type Game struct {
 	Players              []Player
-	PlayersDeadThisRound []int
-	PowerUpsThisRound    []PowerUpActivation
+	PlayersDeadThisRound []int               `json:"-"`
+	PowerUpsThisRound    []PowerUpActivation `json:"-"`
 	Map                  Map
 	Scores               map[string]int
 	PowerUps             []PowerUp
