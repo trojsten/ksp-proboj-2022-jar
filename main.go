@@ -53,7 +53,7 @@ type Game struct {
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "v" {
 		fmt.Println("Proboj Tron Server")
-		fmt.Println("version 7")
+		fmt.Println("version 8")
 		return
 	}
 
