@@ -27,8 +27,8 @@ func DataToObserver(data string, server *bufio.Scanner) ServerResult {
 	return Unknown
 }
 
-func DataToPlayer(data string, player string, server *bufio.Scanner) ServerResult {
-	fmt.Printf("TO PLAYER %s\n", player)
+func DataToPlayer(data string, player string, comment string, server *bufio.Scanner) ServerResult {
+	fmt.Printf("TO PLAYER %s %s\n", player, comment)
 	fmt.Println(data)
 	fmt.Println(".")
 

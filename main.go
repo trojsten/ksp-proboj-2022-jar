@@ -48,12 +48,13 @@ type Game struct {
 	Scores               map[string]int
 	PowerUps             []PowerUp
 	PowerUpTime          int
+	Round                int
 }
 
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "v" {
 		fmt.Println("Proboj Tron Server")
-		fmt.Println("version 8")
+		fmt.Println("version 9")
 		return
 	}
 
@@ -84,7 +85,7 @@ func populatePlayerData(game *Game, scanner *bufio.Scanner) {
 	for i, _ := range game.Players {
 		player := &game.Players[i]
 
-		res := DataToPlayer("HELLO", player.Name, scanner)
+		res := DataToPlayer("HELLO", player.Name, "PREFLIGHT", scanner)
 		if res == Died {
 			game.HandleDeath(player)
 			continue
@@ -119,7 +120,7 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 
 			// Send state to player
 			data := game.StateForPlayer(*player)
-			res := DataToPlayer(data, player.Name, scanner)
+			res := DataToPlayer(data, player.Name, fmt.Sprintf("ROUND %d", game.Round), scanner)
 			if res == Died {
 				game.HandleDeath(player)
 				continue
@@ -237,5 +238,7 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 			game.SpawnPowerUp()
 			game.PowerUpTime = PUDefaultTime
 		}
+
+		game.Round++
 	}
 }
