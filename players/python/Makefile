@@ -1,13 +1,23 @@
-CLEAN = player.tar.gz player
+#program name
+PROGRAM = player
 
-.PHONY: clean player.tar.gz
+$(PYSOURCES) = $(wildcard *.py)
 
-player.tar.gz:
-	tar -cvzf $@ $(wildcard *.py) Makefile
+.PHONY: clean run $(program).tar.gz
 
-player: main.py
+$(program).tar.gz: $(PYSOURCES) Makefile
+	@echo -e $(Green)"Making tar for submit..."$(Color_Off)
+	@tar -czf $@ $(PYSOURCES) Makefile
+	@echo -e $(Green)"Tar successfully created!"$(Color_Off)
+
+$(program): main.py
 	cp $< $@
 	chmod +x $@
 
+run: $(program)
+	@./$<
+
 clean:
-	rm -f $(CLEAN)
+	@rm -f $(program).tar.gz $(program)
+	@echo -e $(Cyan)"Cleaning Complete!"$(Color_Off)
+
