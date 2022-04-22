@@ -76,7 +76,7 @@ func (g *Game) SpawnPowerUp() {
 	for g.Map.Contents[x][y] != -1 || g.HasPowerUpAt(x, y) {
 		x = rand.Intn(g.Map.Width)
 		y = rand.Intn(g.Map.Height)
-		
+
 		tries++
 		if tries > 100 {
 			return
