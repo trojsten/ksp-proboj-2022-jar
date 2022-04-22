@@ -34,11 +34,10 @@ func (g *Game) MovePlayer(p *Player) (bool, int, int) {
 		return false, x, y
 	}
 
-	tile := &g.Map.Contents[x][y]
-	if *tile != -1 {
+	tile := g.Map.Contents[x][y]
+	if tile != -1 {
 		return false, x, y
 	}
-	*tile = p.Idx
 
 	p.X = x
 	p.Y = y

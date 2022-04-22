@@ -109,6 +109,7 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 	for game.Running() {
 		game.PlayersDeadThisRound = []int{}
 		game.PowerUpsThisRound = []PowerUpActivation{}
+		fmt.Fprintf(os.Stderr, "ROUND %d\n", game.Round)
 
 		// Read data from players
 		commands := map[int]string{}
@@ -174,35 +175,63 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 		// Simulate movements
 		lcm := LCM(speeds...)
 		for tick := 1; tick <= lcm; tick++ {
+			type affectedTile struct{ X, Y, Player int }
+			affectedTiles := []affectedTile{}
+
 			for i, _ := range game.Players {
 				player := &game.Players[i]
 				if !player.Alive {
 					continue
 				}
 
-				if player.Speed == 0 {
-					continue
-				}
-
-				if tick%(lcm/player.Speed) != 0 {
+				if player.Speed == 0 || tick%(lcm/player.Speed) != 0 {
 					continue
 				}
 
 				success, nx, ny := game.MovePlayer(player)
+
+				// No collision
 				if success {
+					affectedTiles = append(affectedTiles, affectedTile{
+						X:      player.X,
+						Y:      player.Y,
+						Player: player.Idx,
+					})
 					continue
 				}
 
-				// Collision, if with another player, kill him too.
-				playerCollision := game.PlayerAt(nx, ny)
-				if playerCollision != nil {
-					game.HandleDeath(playerCollision)
-				} else {
-					// It was not player-player collision, so we update scores for that tile.
-					game.UpdateScore(player, nx, ny)
-				}
+				// Collision with already standing wall
+				// I die and update scores.
 				game.HandleDeath(player)
-				// TODO: Scores.
+				game.UpdateScore(player, nx, ny)
+			}
+
+			// Check player collisions.
+			for i, _ := range game.Players {
+				player := &game.Players[i]
+				if !player.Alive {
+					continue
+				}
+
+				// Check only players that moved this tick
+				if player.Speed == 0 || tick%(lcm/player.Speed) != 0 {
+					continue
+				}
+
+				playersHere := game.PlayersAt(player.X, player.Y)
+				if len(playersHere) <= 1 {
+					continue
+				}
+
+				// Multiple players ended up on the same tile. Kill them all.
+				for _, p := range playersHere {
+					game.HandleDeath(p)
+				}
+			}
+
+			// Place tiles.
+			for _, tile := range affectedTiles {
+				game.Map.Contents[tile.X][tile.Y] = tile.Player
 			}
 		}
 

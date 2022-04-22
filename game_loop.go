@@ -82,6 +82,27 @@ func (g *Game) PlayerAt(x, y int) *Player {
 	return nil
 }
 
+func (g *Game) PlayersAt(x, y int) []*Player {
+	r := []*Player{}
+
+	if x < 0 || y < 0 || x >= g.Map.Width || y >= g.Map.Height {
+		return r
+	}
+
+	for i, _ := range g.Players {
+		player := &g.Players[i]
+		if !player.Alive {
+			continue
+		}
+
+		if player.X == x && player.Y == y {
+			r = append(r, player)
+		}
+	}
+
+	return r
+}
+
 func (g *Game) HandleDeath(p *Player) {
 	p.Alive = false
 	g.PlayersDeadThisRound = append(g.PlayersDeadThisRound, p.Idx)
