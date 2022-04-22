@@ -1,10 +1,8 @@
 function setupCanvas(canvas) {
-    let dpr = window.devicePixelRatio || 1
     let rect = canvas.getBoundingClientRect()
-    canvas.width = rect.width * dpr
-    canvas.height = rect.height * dpr
+    canvas.width = rect.width
+    canvas.height = rect.height
     let ctx = canvas.getContext('2d')
-    ctx.scale(dpr, dpr)
     return ctx
 }
 
