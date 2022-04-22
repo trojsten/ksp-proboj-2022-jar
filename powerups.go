@@ -59,13 +59,28 @@ func (g *Game) ApplyPowerUp(typ PowerUpType, invoker *Player) {
 	}
 }
 
+func (g *Game) HasPowerUpAt(x, y int) bool {
+	for _, up := range g.PowerUps {
+		if up.X == x && up.Y == y {
+			return true
+		}
+	}
+	return false
+}
+
 func (g *Game) SpawnPowerUp() {
 	x := rand.Intn(g.Map.Width)
 	y := rand.Intn(g.Map.Height)
 
-	for g.Map.Contents[x][y] != -1 {
+	tries := 0
+	for g.Map.Contents[x][y] != -1 || g.HasPowerUpAt(x, y) {
 		x = rand.Intn(g.Map.Width)
 		y = rand.Intn(g.Map.Height)
+		
+		tries++
+		if tries > 100 {
+			return
+		}
 	}
 
 	g.PowerUps = append(g.PowerUps, PowerUp{
