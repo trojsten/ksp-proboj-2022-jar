@@ -83,9 +83,16 @@ func (g *Game) SpawnPowerUp() {
 		}
 	}
 
+	typ := 1 + rand.Intn(PUTypeCount)
+	if g.Round >= g.Map.Width*g.Map.Height/len(g.Players)*3 {
+		for PowerUpType(typ) == PUClean {
+			typ = 1 + rand.Intn(PUTypeCount)
+		}
+	}
+
 	g.PowerUps = append(g.PowerUps, PowerUp{
 		X:    x,
 		Y:    y,
-		Type: PowerUpType(1 + rand.Intn(PUTypeCount)),
+		Type: PowerUpType(typ),
 	})
 }
