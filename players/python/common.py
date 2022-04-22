@@ -1,7 +1,7 @@
 import enum
 import sys
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 
 class PowerUpType(enum.IntEnum):
@@ -21,7 +21,7 @@ class Player:
     speed: int = 0
     speed_reset_time: int = 0
     alive: bool = False
-    powerup: PowerUpType | None = 0
+    powerup: Optional[PowerUpType] = 0
 
     @classmethod
     def from_input(cls, data: str) -> "Player":
