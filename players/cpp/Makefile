@@ -24,7 +24,7 @@ Purple = '\033[1;35m'
 Cyan = '\033[1;36m'
 White = '\033[1;37m'
 
-all: $(PROGRAM) $(program).tar.gz
+all: $(PROGRAM) $(PROGRAM).tar.gz
 
 $(PROGRAM): $(COBJECTS) $(NOBJECTS)
 	@$(LINKER) $(COBJECTS) $(NOBJECTS) -o $@ $(LFLAGS)
@@ -36,7 +36,7 @@ $(COBJECTS): $(OBJDIR)/%.o : %.cpp
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo -e $(Blue)"C++ compiled "$(Purple)$<$(Blue)" successfully!"$(Color_Off)
 
-$(program).tar.gz: $(CSOURCES) Makefile
+$(PROGRAM).tar.gz: $(CSOURCES) Makefile
 	@echo -e $(Green)"Making tar for submit..."$(Color_Off)
 	@tar -czf $@ $(CSOURCES) Makefile
 	@echo -e $(Green)"Tar successfully created!"$(Color_Off)
@@ -47,6 +47,6 @@ run: $(PROGRAM)
 	@./$<
 
 clean:
-	@rm -f $(PROGRAM) $(COBJECTS) $(program).tar.gz
+	@rm -f $(PROGRAM) $(COBJECTS) $(PROGRAM).tar.gz
 	@echo -e $(Cyan)"Cleaning Complete!"$(Color_Off)
 
