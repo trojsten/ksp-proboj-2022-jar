@@ -7,6 +7,7 @@ OBJDIR = build
 CC = g++
 CFLAGS = -o3 -std=gnu++2b -Wall -Wextra -Wpedantic -c
 CSOURCES := $(wildcard *.cpp)
+HSOURCES := $(wildcard *.h)
 COBJECTS := $(CSOURCES:%.cpp=$(OBJDIR)/%.o)
 
 #linker
@@ -38,7 +39,7 @@ $(COBJECTS): $(OBJDIR)/%.o : %.cpp
 
 $(PROGRAM).tar.gz: $(CSOURCES) Makefile
 	@echo -e $(Green)"Making tar for submit..."$(Color_Off)
-	@tar -czf $@ $(CSOURCES) Makefile
+	@tar -czf $@ $(CSOURCES) $(HSOURCES) Makefile
 	@echo -e $(Green)"Tar successfully created!"$(Color_Off)
 
 .PHONY: clean all run
