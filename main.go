@@ -246,8 +246,14 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 		}
 
 		// Update scores of players that died this round
-		for _, n := range game.PlayersDeadThisRound {
-			game.DeathScore(&game.Players[n])
+		if len(game.PlayersDeadThisRound) >= 1 {
+			for _, p := range game.Players {
+				if !p.Alive {
+					continue
+				}
+
+				game.Scores[p.Name]++
+			}
 		}
 
 		// Apply powerups

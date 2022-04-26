@@ -132,18 +132,3 @@ func (g *Game) UpdateScore(p *Player, x, y int) {
 		g.Scores[g.Players[tile].Name]++
 	}
 }
-
-func (g *Game) DeathScore(p *Player) {
-	alive := []Player{}
-	for _, player := range g.Players {
-		if player.Alive {
-			alive = append(alive, player)
-		}
-	}
-
-	if len(alive) == 1 {
-		g.Scores[alive[0].Name] += len(g.Players)
-	}
-
-	g.Scores[p.Name] += len(g.Players) - len(alive)
-}
