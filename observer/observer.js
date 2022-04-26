@@ -150,7 +150,7 @@ function renderFrame(f) {
 
 let PLAYBACK = {
     playing: false,
-    speed: 200
+    speed: 50
 }
 
 document.getElementById("js-frame-prev").addEventListener("click", () => {
