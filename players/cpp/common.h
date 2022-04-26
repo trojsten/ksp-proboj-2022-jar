@@ -29,20 +29,21 @@ void read_state ();
 
 void greet_server (const char *name, const char *color);
 
-void send_command (const Command& cmd);
+void send_command (const Command &cmd);
 
 void end_communication ();
 
 template<class T>
-void update (std::vector<T>& vec) {
+template<class T>
+void update (vector<T> &vec) {
 	int n;
-	std::cin >> n;
-	if (vec.empty()) vec.assign(n, T());
+	cin >> n;
+	vec.resize(n);
 	for (int i = 0; i < n; ++i) vec[i].update();
 }
 
 template<class T>
-void update (std::vector<std::vector<T>>& vec) {
+void update (std::vector<std::vector<T>> &vec) {
 	int w, h;
 	std::cin >> w >> h;
 	if (vec.empty()) vec.assign(w, std::vector<T>(h, T()));
