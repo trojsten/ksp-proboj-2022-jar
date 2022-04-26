@@ -5,7 +5,7 @@ OBJDIR = build
 
 #c++ compiler
 CC = g++
-CFLAGS = -o3 -std=gnu++2b -Wall -Wextra -Wpedantic -c
+CFLAGS = -o3 -std=gnu++2b -Wall -Wextra -Wpedantic
 CSOURCES := $(wildcard *.cpp)
 HSOURCES := $(wildcard *.h)
 COBJECTS := $(CSOURCES:%.cpp=$(OBJDIR)/%.o)
