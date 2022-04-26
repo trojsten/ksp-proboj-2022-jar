@@ -34,10 +34,9 @@ void send_command (const Command &cmd);
 void end_communication ();
 
 template<class T>
-template<class T>
-void update (vector<T> &vec) {
+void update (std::vector<T> &vec) {
 	int n;
-	cin >> n;
+	std::cin >> n;
 	vec.resize(n);
 	for (int i = 0; i < n; ++i) vec[i].update();
 }
@@ -51,7 +50,7 @@ void update (std::vector<std::vector<T>> &vec) {
 }
 
 template<class T>
-void update (T& p) {
+void update (T &p) {
 	p.update();
 }
 
