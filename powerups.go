@@ -1,6 +1,9 @@
 package main
 
-import "math/rand"
+import (
+	"math"
+	"math/rand"
+)
 
 type PowerUpType int
 
@@ -69,6 +72,10 @@ func (g *Game) HasPowerUpAt(x, y int) bool {
 }
 
 func (g *Game) SpawnPowerUp() {
+	if len(g.PowerUps) > int(math.Sqrt(float64(g.Map.Width*g.Map.Height))) {
+		return
+	}
+
 	x := rand.Intn(g.Map.Width)
 	y := rand.Intn(g.Map.Height)
 
