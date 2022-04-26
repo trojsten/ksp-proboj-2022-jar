@@ -39,6 +39,12 @@ function observe(log) {
     }
 
     FRAME = 0
+    let frame = OBSLINES[0]
+    GRID = Math.min(CANVAS.width / frame.Map.Width, CANVAS.height / frame.Map.Height)
+    let mapW = frame.Map.Width * GRID
+    let mapH = frame.Map.Height * GRID
+
+    CTX.translate((CANVAS.width - mapW) / 2, (CANVAS.height - mapH) / 2)
     renderFrame(0)
 
     if (urlParams.get("autoplay") === "1") {
@@ -70,8 +76,7 @@ function renderPlayers(f) {
 
 function renderFrame(f) {
     const frame = OBSLINES[f]
-    GRID = Math.min(CANVAS.width / frame.Map.Width, CANVAS.height / frame.Map.Height)
-    CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
+    CTX.clearRect(-GRID, -GRID, CANVAS.width+GRID, CANVAS.height+GRID);
 
     CTX.shadowColor = null
     CTX.shadowBlur = null
