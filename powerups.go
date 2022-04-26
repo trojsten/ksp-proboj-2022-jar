@@ -56,7 +56,9 @@ func (g *Game) ApplyPowerUp(typ PowerUpType, invoker *Player) {
 	} else if typ == PUClean {
 		for x := 0; x < g.Map.Width; x++ {
 			for y := 0; y < g.Map.Height; y++ {
-				g.Map.Contents[x][y] = -1
+				if g.Map.Contents[x][y] >= 0 {
+					g.Map.Contents[x][y] = -1
+				}
 			}
 		}
 	}
