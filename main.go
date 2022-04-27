@@ -49,12 +49,13 @@ type Game struct {
 	PowerUps             []PowerUp
 	PowerUpTime          int
 	Round                int
+	CleanPowerUpCount    int
 }
 
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "v" {
 		fmt.Println("Proboj Tron Server")
-		fmt.Println("version 12")
+		fmt.Println("version 13")
 		return
 	}
 
