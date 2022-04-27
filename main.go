@@ -55,7 +55,7 @@ type Game struct {
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "v" {
 		fmt.Println("Proboj Tron Server")
-		fmt.Println("version 13")
+		fmt.Println("version 14")
 		return
 	}
 
@@ -129,11 +129,14 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 			}
 
 			// Read data from player
+			ts := time.Now()
+			fmt.Fprintf(os.Stderr, "reading from... %v\n", player.Name)
 			res, playerData := ReadFromPlayer(player.Name, scanner)
 			if res == Died {
 				game.HandleDeath(player)
 				continue
 			}
+			fmt.Fprintf(os.Stderr, "got response after %v ms\n", time.Now().Sub(ts).Milliseconds())
 
 			commands[player.Idx] = playerData
 		}
@@ -253,7 +256,7 @@ func gameLoop(game *Game, scanner *bufio.Scanner) {
 					continue
 				}
 
-				game.Scores[p.Name]++
+				game.Scores[p.Name] += len(game.PlayersDeadThisRound)
 			}
 		}
 
